@@ -1,0 +1,1368 @@
+{
+  "info": {
+    "_postman_id": "50f27c82-1a85-4d3c-9ed9-agrosierra-u2",
+    "name": "EXAMEN U2 - AgroAPI - Lee Orbezo",
+    "description": "Colección del examen AgroSierra. Incluye autenticación, paginación, CRUD y evidencias 400/401/403/404/409. Ejecuta primero los tres logins. Las solicitudes de cierre de campaña modifican datos y están al final.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "tecnicoToken",
+      "value": ""
+    },
+    {
+      "key": "jefeToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "loteConCosechaId",
+      "value": "1"
+    },
+    {
+      "key": "loteSinCosechaId",
+      "value": "2"
+    },
+    {
+      "key": "loteCerradoId",
+      "value": "7"
+    },
+    {
+      "key": "laborPropiaTecnicoId",
+      "value": "1"
+    },
+    {
+      "key": "laborAjenaTecnicoId",
+      "value": "2"
+    },
+    {
+      "key": "laborCreadaId",
+      "value": ""
+    },
+    {
+      "key": "supervisorToken",
+      "value": ""
+    },
+    {
+      "key": "laborSupervisorId",
+      "value": "4"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Autenticación",
+      "item": [
+        {
+          "name": "Login TECNICO - 200",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tecnico1\",\n  \"password\": \"Agro2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json(); pm.collectionVariables.set(\"tecnicoToken\", j.token);",
+                  "pm.test(\"Devuelve privilegios\", () => pm.expect(pm.response.json().privilegios).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Login JEFE_CAMPO - 200",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jefe1\",\n  \"password\": \"Agro2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"jefeToken\", pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Login ADMINISTRADOR - 200",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Agro2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"adminToken\", pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Login SUPERVISOR_CALIDAD - 200",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"supervisor1\",\n  \"password\": \"Agro2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json(); pm.collectionVariables.set(\"supervisorToken\", j.token);",
+                  "pm.test(\"Puede editar y no cerrar\", () => { pm.expect(j.privilegios).to.include(\"LABOR_EDITAR\"); pm.expect(j.privilegios).not.to.include(\"CAMPANIA_CERRAR\"); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Credenciales incorrectas - 401",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tecnico1\",\n  \"password\": \"incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"Formato de error uniforme\", () => { const j=pm.response.json(); pm.expect(j).to.have.keys(\"timestamp\",\"status\",\"error\",\"message\",\"path\",\"validationErrors\"); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Seguridad JWT y privilegios",
+      "item": [
+        {
+          "name": "Sin token - 401",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes?pagina=0&tamanio=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Token alterado - 401",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "token.alterado.invalido",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Usuario actual TECNICO - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "me"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "TECNICO intenta eliminar - 403",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/labores/{{laborAjenaTecnicoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores",
+                "{{laborAjenaTecnicoId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "ADMIN intenta crear labor - 403",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 10,\n  \"observacion\": \"Intento sin privilegio\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "TECNICO corrige labor ajena - 403 RN-02",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 1,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 10,\n  \"observacion\": \"Intento sobre labor ajena\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores/{{laborAjenaTecnicoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores",
+                "{{laborAjenaTecnicoId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "SUPERVISOR corrige cualquier labor - 200",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 10,\n  \"cantidadJornales\": 3,\n  \"observacion\": \"Corrección realizada por supervisor\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores/{{laborSupervisorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores",
+                "{{laborSupervisorId}}"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "SC-B: el supervisor posee LABOR_EDITAR sobre todas las labores, sin CAMPANIA_CERRAR."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Lotes y paginación",
+      "item": [
+        {
+          "name": "Padrón paginado - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes?pagina=0&tamanio=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Envoltorio paginado\", () => { const j=pm.response.json(); [\"contenido\",\"pagina\",\"tamanio\",\"totalElementos\",\"totalPaginas\",\"ultima\"].forEach(k=>pm.expect(j).to.have.property(k)); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Filtro por valle - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes?pagina=0&tamanio=20&valle=Valle Azul",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                },
+                {
+                  "key": "valle",
+                  "value": "Valle Azul"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Filtro por campaña cerrada - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes?pagina=0&tamanio=20&campaniaCerrada=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                },
+                {
+                  "key": "campaniaCerrada",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Detalle de lote - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/{{loteConCosechaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "{{loteConCosechaId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Labores recientes del lote - 200",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/{{loteConCosechaId}}/labores?pagina=0&tamanio=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "{{loteConCosechaId}}",
+                "labores"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Lote inexistente - 404",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "999999"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - CRUD de labores con JEFE_CAMPO",
+      "item": [
+        {
+          "name": "Crear labor - 201",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 12.5,\n  \"observacion\": \"Creada desde Postman\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set(\"laborCreadaId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Actualizar labor - 200",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"FUMIGACION\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 3,\n  \"observacion\": \"Actualizada desde Postman\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores/{{laborCreadaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores",
+                "{{laborCreadaId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Eliminar labor - 204",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/labores/{{laborCreadaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores",
+                "{{laborCreadaId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));",
+                  "pm.test(\"Respuesta sin cuerpo\", () => pm.expect(pm.response.text()).to.eql(\"\"));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Reglas y validaciones",
+      "item": [
+        {
+          "name": "RN-04 fumigación excedida - 400",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"FUMIGACION\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 9999,\n  \"observacion\": \"Debe fallar por dosis\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Error asociado a cantidad\", () => pm.expect(pm.response.json().validationErrors).to.have.property(\"cantidad\"));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Formulario inválido - 400",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 2,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": -1,\n  \"observacion\": \"Inválida\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "RN-01 crear en campaña cerrada - 409",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteId\": 7,\n  \"tipo\": \"RIEGO\",\n  \"fecha\": \"2026-10-27\",\n  \"cantidad\": 5,\n  \"observacion\": \"Debe fallar por campaña cerrada\",\n  \"cantidadJornales\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/labores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "labores"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "RN-03 cerrar lote sin COSECHA - 409",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/{{loteSinCosechaId}}/cerrar-campania",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "{{loteSinCosechaId}}",
+                "cerrar-campania"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Cerrar campaña sin privilegio - 403",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tecnicoToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/{{loteConCosechaId}}/cerrar-campania",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "{{loteConCosechaId}}",
+                "cerrar-campania"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "RN-03 cerrar lote con COSECHA - 200 (EJECUTAR AL FINAL)",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jefeToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lotes/{{loteConCosechaId}}/cerrar-campania",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "lotes",
+                "{{loteConCosechaId}}",
+                "cerrar-campania"
+              ]
+            },
+            "description": "Esta solicitud cambia permanentemente el lote 1 a campaña cerrada. Ejecútala al final de la demostración."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    }
+  ]
+}
