@@ -92,6 +92,7 @@ public class DatosSemillaConfig {
                 new HashSet<>(Set.of(rol))
             ));
         usuario.setNombre(nombre);
+        usuario.getRoles().add(rol);
         usuarios.save(usuario);
     }
 

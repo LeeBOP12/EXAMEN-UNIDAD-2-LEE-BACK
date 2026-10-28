@@ -26,9 +26,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = jwt.extraerUsername(header.substring(7).trim());
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails details = usuarios.loadUserByUsername(username);
-                var auth = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                if (!details.isEnabled()) {
+                    req.setAttribute(ATRIBUTO_ERROR, "La cuenta está deshabilitada");
+                } else {
+                    var auth = new UsernamePasswordAuthenticationToken(
+                        details, null, details.getAuthorities()
+                    );
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         } catch (ExpiredJwtException e) {
             req.setAttribute(ATRIBUTO_ERROR, "El token ha expirado. Inicie sesión nuevamente");
